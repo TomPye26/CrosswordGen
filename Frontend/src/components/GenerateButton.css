@@ -1,0 +1,27 @@
+
+.generate-button {
+    padding-bottom: 10px;
+    font-family: Arial;
+    display: flex;
+    align-items: center;
+}
+.generate-button input {
+    width: 200px;  /* Adjust slider width as needed */
+    height: 8px;  /* Adjust height of the slider */
+    background: #ddd;  /* Light gray background for slider */
+    border-radius: 5px;
+    outline: none;
+    transition: background 0.3s ease;
+
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.generate-button button {
+    font-family: Arial;
+    border: 1px solid black;
+    display: inline-block;
+    background-color: white;
+    height: 30px;
+    margin-left: 10px;
+}
