@@ -1,0 +1,8 @@
+Frontend/node_modules/
+Frontend/dist/
+
+Backend/app/appenv/
+Backend/OpenAISecretKey.txt
+*.bin
+
+*.vscode
