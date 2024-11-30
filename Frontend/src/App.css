@@ -18,32 +18,33 @@
     display: flex; /* Flex layout to place children side by side */
     flex-direction: column;
     justify-content: space-between; 
-    gap: 20px; /* Space between components */
+    gap: 20px; 
     width: 100%; /* Ensure the container takes full width */
     max-width: 1200px; /* Optional: limit the max width for large screens */
-   /* margin-top: 20px; /* Adds some spacing from the top */
+    /* margin-top: 20px; /* Adds some spacing from the top */
 }
 
 .grid-and-clues {
     display: flex;
     flex-direction: row;
-    gap: 20px
+    gap: 20px;
+    height: var(--min-grid-width);
+    border: 1px solid purple;
 }
 .grid {
     display: grid; 
     grid-template-columns: repeat(auto-fill, 45px);
     flex-grow: 1; 
-    min-width: var(--min-grid-width, 30px); 
+    min-width: var(--min-grid-width, 45px); 
     /* max-height: 315px; */
     border: 1px solid red; 
 }
 
-
 .clue-box {
-    flex-shrink: 0; /* Prevent ClueBox from shrinking */
-    width: 300px; /* Set a fixed width for ClueBox */
-    border: 1px solid green; /* Border for visibility */
-    padding: 10px; /* Padding for better visual appearance */
+    flex-shrink: 0;
+    width: 300px;
+    border: 1px solid green;
+    padding: 5px;
 }
 
 .settings-bar {

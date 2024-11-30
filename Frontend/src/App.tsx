@@ -29,20 +29,19 @@ const App: React.FC = () => {
 
     // test clues
     const acrossClues = [
-        { number: 1, clue: "A large body of water" },
-        { number: 5, clue: "A color of the sky" },
-        { number: 8, clue: "Not soft" },
-        // More across clues
+        { number: 1, clue: "A large body of water", direction: 'across'},
+        { number: 5, clue: "A color of the sky", direction: 'across'},
+        { number: 8, clue: "Not soft", direction: 'across'},
       ];
     
       const downClues = [
-        { number: 1, clue: "Not night" },
-        { number: 2, clue: "Something you eat" },
-        { number: 4, clue: "A large animal" },
+        { number: 1, clue: "Not night", direction: 'down'},
+        { number: 2, clue: "Something you eat", direction: 'down'},
+        { number: 4, clue: "A large animal", direction: 'down'},
         // More down clues
       ];
 
-    const minGridWidth: number = (grid.length * 45)
+    const minGridWidth: number = (grid.length * 45) + (grid.length * 2.1)
     document.documentElement.style.setProperty('--min-grid-width', `${minGridWidth}px`);
 
     return (
@@ -74,6 +73,8 @@ const App: React.FC = () => {
                                         <ClueBox
                                             acrossClues={acrossClues}
                                             downClues={downClues}
+                                            highlightClueNumber={8}
+                                            highlightClueDirection="across"
                                             />
                                     </div>
                                 </div>

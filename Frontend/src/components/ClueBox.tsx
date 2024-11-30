@@ -1,42 +1,68 @@
 import React from 'react';
+import './ClueBox.css'
 
-// Define the type for clues
-type Clue = {
+interface Clue {
   number: number;
   clue: string;
+  direction: string;
 };
 
-// Define the props type for ClueBox
-type ClueBoxProps = {
+interface ClueBoxDirectionProps {
+  clueList: Clue[];
+  direction: string;
+  highlightClueNumber: number;
+  highlightClueDirection: 'down' | 'across';
+};
+
+interface ClueBoxProps {
   acrossClues: Clue[];
   downClues: Clue[];
+  highlightClueNumber: number;
+  highlightClueDirection: 'down' | 'across';
 };
 
-const ClueBox: React.FC<ClueBoxProps> = ({ acrossClues, downClues }) => {
+const ClueBoxDirection: React.FC<ClueBoxDirectionProps> = ({
+  clueList, direction, highlightClueNumber, highlightClueDirection
+}) => {
   return (
-    <div className="clue-list-container">
-      <div className="across-clues">
-        <h3>Across</h3>
-        <ul>
-          {acrossClues.map((clue) => (
-            <li key={clue.number}>
-              <strong>{clue.number}. </strong>{clue.clue}
-            </li>
-          ))}
-        </ul>
-      </div>
+    <div className="clue-list-container-direction">
+    {clueList.map((clue) => (
+      <p 
+        key={clue.number} 
+        className={
+          ((clue.number === highlightClueNumber) && (clue.direction === highlightClueDirection)) ? 'clue-highlighted' : 'clue'}
+      >
+        <div className='clue-number'>{clue.number}.</div>
+        <div className='clue-text'>{clue.clue}</div>
+      </p>
+    ))}
+  </div>
+  )
+}
 
-      <div className="down-clues">
-        <h3>Down</h3>
-        <ul>
-          {downClues.map((clue) => (
-            <li key={clue.number}>
-              <strong>{clue.number}. </strong>{clue.clue}
-            </li>
-          ))}
-        </ul>
-      </div>
+const ClueBox: React.FC<ClueBoxProps> = ({
+  acrossClues, downClues, highlightClueNumber, highlightClueDirection
+}) => {
+  return (
+    <div className='clue-list-container'>
+      <h3>Across</h3>
+      <ClueBoxDirection
+        clueList={acrossClues}
+        direction='across'
+        highlightClueNumber={highlightClueNumber}
+        highlightClueDirection={highlightClueDirection}
+      />
+    
+      <h3>Down</h3>
+      <ClueBoxDirection
+        clueList={downClues}
+        direction='down'
+        highlightClueNumber={highlightClueNumber}
+        highlightClueDirection={highlightClueDirection}
+      />
+
     </div>
+    
   );
 };
 
