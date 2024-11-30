@@ -16,6 +16,7 @@
 
 .main-body {
     display: flex; /* Flex layout to place children side by side */
+    flex-direction: column;
     justify-content: space-between; 
     gap: 20px; /* Space between components */
     width: 100%; /* Ensure the container takes full width */
@@ -23,6 +24,11 @@
    /* margin-top: 20px; /* Adds some spacing from the top */
 }
 
+.grid-and-clues {
+    display: flex;
+    flex-direction: row;
+    gap: 20px
+}
 .grid {
     display: grid; 
     grid-template-columns: repeat(auto-fill, 45px);
@@ -41,7 +47,8 @@
 }
 
 .settings-bar {
-    width: 250px;
+    width: 100%;
+    height: 50px;
     border: 1px dashed turquoise;
     display: flex;
     justify-content: flex-start;

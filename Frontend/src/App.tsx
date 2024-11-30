@@ -62,23 +62,25 @@ const App: React.FC = () => {
                     } else if (grid && requestedGrid) {
                         return (
                             <div className="main-body">
-                                <div className="grid">
-                                    <Grid
-                                        gridArray={grid}
-                                        autoCheck={autoCheckOn}
-                                        handleSquareClick={handleSquareClick}
-                                    />
+                                <div className="grid-and-clues">
+                                    <div className="grid">
+                                        <Grid
+                                            gridArray={grid}
+                                            autoCheck={autoCheckOn}
+                                            handleSquareClick={handleSquareClick}
+                                            />
+                                    </div>
+                                    <div className="clue-box">
+                                        <ClueBox
+                                            acrossClues={acrossClues}
+                                            downClues={downClues}
+                                            />
+                                    </div>
                                 </div>
-                                <div className="clue-box">
-                                    <ClueBox
-                                        acrossClues={acrossClues}
-                                        downClues={downClues}
+                                    <div className="settings-bar">
+                                    <SettingsBar 
+                                        toggleAutoCheckFunc={toggleAutoCheck}
                                     />
-                                </div>
-                                <div className="settings-bar">
-                                   <SettingsBar 
-                                       toggleAutoCheckFunc={toggleAutoCheck}
-                                   />
                                 </div>
                             </div>
                         )
