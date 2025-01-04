@@ -1,14 +1,23 @@
 import React, { useState } from "react";
 import { fetchCrosswordGrid } from "../api"
+import { Clue } from "./ClueBox"
 import "./GenerateButton.css"
 
-const GenerateButton: React.FC<{ onGenerate: (grid: string[][]) => void }> = ({ onGenerate }) => {
+interface GenerateButtonProps {
+  onGenerate: (
+    grid: string[][],
+    wordAcrossList: Clue[],
+    wordDownList: Clue[]
+  ) => void;
+}
+
+const GenerateButton: React.FC<GenerateButtonProps> = ({ onGenerate }) => {
   const [width, setWidth] = useState<number>(10);
   
   const handleGenerate = async () => {
     const newGrid = await fetchCrosswordGrid(width, width);
     if (newGrid) {
-      onGenerate(newGrid);
+      onGenerate(newGrid.grid, newGrid.words_across, newGrid.words_down);
     }
   }
   return (

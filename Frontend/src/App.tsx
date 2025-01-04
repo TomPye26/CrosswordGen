@@ -2,29 +2,44 @@
 import React, { useEffect, useState } from "react";
 import { fetchCrosswordGrid } from "./api";
 import Grid from "./components/Grid";
-import ClueBox from "./components/ClueBox"
-import GenerateButton from "./components/GenerateButton"
+import ClueBox, {Clue} from "./components/ClueBox";
+import GenerateButton from "./components/GenerateButton";
 import SettingsBar from "./components/SettingsBar";
 import "./App.css"
 
 const App: React.FC = () => {
+    
     const [requestedGrid, setRequestedGrid] = useState<boolean>(false)
     const [grid, setGrid] = useState<string[][]>([]);
-
-    const handleGenerate = (newGrid: string[][]) => {
+    const [wordsAcrossList, setwordsAcrossList] = useState<Clue[]>([]);
+    const [wordsDownList, setwordsDownList] = useState<Clue[]>([]);
+    const handleGenerate = (
+        newGrid: string[][],
+        wordsAcrossList: Clue[],
+        wordsDownList: Clue[]
+    ) => {
         setRequestedGrid(true)  
         setGrid(newGrid);
+        setwordsAcrossList(wordsAcrossList);
+        setwordsDownList(wordsDownList);
     };
-    
+    console.log(wordsAcrossList);
+
     const [autoCheckOn, setAutoCheckOn] = useState<boolean>(false);
     const toggleAutoCheck = (newState: boolean) => {
         setAutoCheckOn(newState);
     }
 
     const [clickedSquare, setClickedSqure] = useState<number[]>([])
+    const [facingDirection, setFacingDirection] = useState<string>("across")
     const handleSquareClick = (x: number, y: number) => {
         setClickedSqure([x,y]);
-    }
+        
+        let newDir: string = ((facingDirection === "down") ? "across" : "down");
+        setFacingDirection(newDir)
+     }
+
+     console.log(facingDirection)
 
 
     // test clues
@@ -33,13 +48,13 @@ const App: React.FC = () => {
         { number: 5, clue: "A color of the sky", direction: 'across'},
         { number: 8, clue: "Not soft", direction: 'across'},
       ];
-    
-      const downClues = [
-        { number: 1, clue: "Not night", direction: 'down'},
-        { number: 2, clue: "Something you eat", direction: 'down'},
-        { number: 4, clue: "A large animal", direction: 'down'},
-        // More down clues
-      ];
+   
+    const downClues = [
+    { number: 1, clue: "Not night", direction: 'down'},
+    { number: 2, clue: "Something you eat", direction: 'down'},
+    { number: 4, clue: "A large animal", direction: 'down'},
+    // More down clues
+    ];
 
     const minGridWidth: number = (grid.length * 45) + (grid.length * 2.1)
     document.documentElement.style.setProperty('--min-grid-width', `${minGridWidth}px`);
@@ -71,8 +86,8 @@ const App: React.FC = () => {
                                     </div>
                                     <div className="clue-box">
                                         <ClueBox
-                                            acrossClues={acrossClues}
-                                            downClues={downClues}
+                                            acrossClues={wordsAcrossList}
+                                            downClues={wordsDownList}
                                             highlightClueNumber={8}
                                             highlightClueDirection="across"
                                             />

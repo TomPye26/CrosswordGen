@@ -1,10 +1,12 @@
 import React from 'react';
 import './ClueBox.css'
 
-interface Clue {
+export interface Clue {
   number: number;
+  word: string
   clue: string;
   direction: string;
+  positions: number[][]
 };
 
 interface ClueBoxDirectionProps {

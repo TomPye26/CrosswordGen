@@ -4,15 +4,27 @@
 import json
 from random import randint
 from time import time
-from typing import Annotated
+from typing import Annotated, Dict, List, Tuple
 
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 
-# from pydantic import BaseModel
+from pydantic import BaseModel
 
 from Wrappers.Python.libWizium import Wizium
 
+class Word(BaseModel):
+    word: str
+    clue: str
+    direction: str
+    number: int
+    positions: List[Tuple[int, int]]
+
+
+class PuzzleResponse(BaseModel):
+    grid: List[List[str]]
+    words_across: List[Word]
+    words_down: List[Word]
 
 app = FastAPI()
 
@@ -79,12 +91,99 @@ def solve(wiz, max_black=0, heuristic_level=0, seed=0):
 
     return wiz
 
+# TODO: impement in the c++ module
+def find_words(grid: list[list[str]]) -> List[Word]:
+    """Find the words in the grid and give each a clue number, including positions."""
+
+    words_down = []
+    clue_number = 1  # Start clue numbering at 1
+    clue_map = {}  # Dictionary to store the clue numbers by starting position
+    
+    # Find words across
+    for row_idx, row in enumerate(grid):
+        word = ''
+        positions = []  # To store the grid positions of this word
+        for col_idx, cell in enumerate(row):
+            if cell != '#':
+                word += cell
+                positions.append((row_idx, col_idx))  # Track the position
+                # If this is the first letter of the word (starting position), assign a clue number
+                if (row_idx, col_idx) not in clue_map:
+                    clue_map[(row_idx, col_idx)] = clue_number
+                    clue_number += 1
+            else:
+                if len(word) > 1:  # Only add words with more than 1 character
+                    start_pos = (row_idx, col_idx - len(word))
+                    words_down.append(
+                        Word(
+                            word=word,
+                            clue=word,
+                            direction="down",
+                            number=clue_map[start_pos],
+                            positions=positions
+                        )
+                    )
+                word = ''
+                positions = []  # Reset positions
+        if len(word) > 1:  # Check the last word in the row
+            start_pos = (row_idx, col_idx - len(word) + 1)
+            words_down.append(
+                Word(
+                    word=word,
+                    clue=word,
+                    direction="down",
+                    number=clue_map[start_pos],
+                    positions=positions
+                )
+            )
+    
+    # Find words down
+    words_across = []
+    num_columns = len(grid[0]) if grid else 0
+    for col_idx in range(num_columns):
+        word = ''
+        positions = []  # To store the grid positions of this word
+        for row_idx, row in enumerate(grid):
+            cell = row[col_idx]
+            if cell != '#':
+                word += cell
+                positions.append((row_idx, col_idx))  # Track the position
+                # If this is the first letter of the word (starting position), assign a clue number
+                if (row_idx, col_idx) not in clue_map:
+                    clue_map[(row_idx, col_idx)] = clue_number
+                    clue_number += 1
+            else:
+                if len(word) > 1:  # Only add words with more than 1 character
+                    start_pos = (row_idx - len(word), col_idx)
+                    words_across.append(
+                        Word(
+                            word=word,
+                            clue=word,
+                            direction="across",
+                            number=clue_map[start_pos],
+                            positions=positions)
+                    )
+                word = ''
+                positions = []  # Reset positions
+        if len(word) > 1:  # Check the last word in the column
+            start_pos = (row_idx - len(word) + 1, col_idx)
+            words_across.append(
+                Word(
+                    word=word,
+                    clue=word,
+                    direction="across",
+                    number=clue_map[start_pos],
+                    positions=positions
+                )
+            )
+
+    return (words_across, words_down)
 
 @app.get("/generate_puzzle")
 def generate_puzzle(
     x_size: Annotated[int, Query(ge=5, le=15)],
     y_size: Annotated[int, Query(ge=5, le=15)],
-) -> list[list[str]]:
+) -> PuzzleResponse:
     """ gernerate puzzle """
 
     wiz = Wizium(BIN_PATH)
@@ -104,4 +203,10 @@ def generate_puzzle(
 
     return_grid = [list(word) for word in grid]
 
-    return return_grid
+    words_across, words_down = find_words(return_grid)
+
+    return PuzzleResponse(
+        grid=return_grid,
+        words_across=words_across,
+        words_down=words_down
+    )
